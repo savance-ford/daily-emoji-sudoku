@@ -35,6 +35,8 @@ const VARIANT_LABELS: Record<AdVariant, string> = {
   "rewarded-hint": "Watch an ad to reveal a hint cell",
 };
 
+//@ts-ignore - This component is a placeholder and will be implemented with real ad code in the future. 
+// For now, it returns null to hide ad placeholders.
 export default function AdPlaceholder({ variant, className = "" }: AdPlaceholderProps) {
   // return (
   //   // Future: Replace this div with actual ad code
