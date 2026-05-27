@@ -36,14 +36,15 @@ const VARIANT_LABELS: Record<AdVariant, string> = {
 };
 
 export default function AdPlaceholder({ variant, className = "" }: AdPlaceholderProps) {
-  return (
-    // Future: Replace this div with actual ad code
-    <div
-      className={`${VARIANT_STYLES[variant]} ${className}`}
-      role="complementary"
-      aria-label="Advertisement placeholder"
-    >
-      <span>{VARIANT_LABELS[variant]}</span>
-    </div>
-  );
+  // return (
+  //   // Future: Replace this div with actual ad code
+  //   <div
+  //     className={`${VARIANT_STYLES[variant]} ${className}`}
+  //     role="complementary"
+  //     aria-label="Advertisement placeholder"
+  //   >
+  //     <span>{VARIANT_LABELS[variant]}</span>
+  //   </div>
+  // );
+  return null; // Hide ad placeholders for now
 }
