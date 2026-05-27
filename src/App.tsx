@@ -10,13 +10,23 @@ import GameScreen from "./components/GameScreen";
 import SeoContent from "./components/SeoContent";
 import Footer from "./components/Footer";
 import LegalPage from "./components/LegalPage";
+import MarketingPage from "./components/MarketingPage";
 import type { Puzzle, Difficulty } from "./data/puzzles";
 import { getDailyPuzzle, PUZZLES_BY_DIFFICULTY } from "./data/puzzles";
 import { getStats, isDarkMode, setDarkMode, setLastDifficulty } from "./utils/storage";
 import type { GameStats } from "./utils/storage";
 import { trackEvent } from "./utils/analytics";
 
-type Screen = "home" | "difficulty" | "game" | "privacy" | "terms" | "disclaimer";
+type Screen =
+  | "home"
+  | "difficulty"
+  | "game"
+  | "howTo"
+  | "dailyLanding"
+  | "easyLanding"
+  | "privacy"
+  | "terms"
+  | "disclaimer";
 type LegalScreen = "privacy" | "terms" | "disclaimer";
 
 interface GameState {
@@ -27,6 +37,9 @@ interface GameState {
 const PATH_TO_SCREEN: Record<string, Screen> = {
   "/": "home",
   "/difficulty": "difficulty",
+  "/how-to-play-emoji-sudoku": "howTo",
+  "/daily-emoji-sudoku": "dailyLanding",
+  "/easy-emoji-sudoku": "easyLanding",
   "/privacy": "privacy",
   "/privacy-policy": "privacy",
   "/terms": "terms",
@@ -37,6 +50,9 @@ const PATH_TO_SCREEN: Record<string, Screen> = {
 const SCREEN_TO_PATH: Record<Exclude<Screen, "game">, string> = {
   home: "/",
   difficulty: "/difficulty",
+  howTo: "/how-to-play-emoji-sudoku",
+  dailyLanding: "/daily-emoji-sudoku",
+  easyLanding: "/easy-emoji-sudoku",
   privacy: "/privacy",
   terms: "/terms",
   disclaimer: "/disclaimer",
@@ -46,17 +62,37 @@ function screenFromPathname(pathname: string): Screen {
   return PATH_TO_SCREEN[pathname] ?? "home";
 }
 
-function updateDocumentTitle(screen: Screen) {
+function updateDocumentMeta(screen: Screen) {
   const titles: Record<Screen, string> = {
     home: "Daily Emoji Sudoku - Free Online Emoji Sudoku Puzzle",
     difficulty: "Choose a Puzzle - Daily Emoji Sudoku",
     game: "Play Emoji Sudoku - Daily Emoji Sudoku",
+    howTo: "How to Play Emoji Sudoku - Rules and Beginner Guide",
+    dailyLanding: "Daily Emoji Sudoku - Play Today’s Free Puzzle",
+    easyLanding: "Easy Emoji Sudoku - Beginner-Friendly Free Puzzle",
     privacy: "Privacy Policy - Emoji Sudoku",
     terms: "Terms of Use - Emoji Sudoku",
     disclaimer: "Disclaimer - Emoji Sudoku",
   };
 
+  const descriptions: Record<Screen, string> = {
+    home: "Play Daily Emoji Sudoku, a free online emoji puzzle game with daily puzzles, hints, streaks, and mobile-friendly Sudoku-style logic grids.",
+    difficulty: "Choose an easy, medium, or hard Emoji Sudoku puzzle and play free online on mobile or desktop.",
+    game: "Play a free Emoji Sudoku puzzle online. Fill the grid with emojis using Sudoku-style logic rules.",
+    howTo: "Learn how to play Emoji Sudoku with simple rules, examples, and beginner tips for solving 4x4 emoji logic puzzles.",
+    dailyLanding: "Play today’s Daily Emoji Sudoku puzzle, a quick free daily brain teaser with emojis, hints, and streak tracking.",
+    easyLanding: "Play Easy Emoji Sudoku, a beginner-friendly free online Sudoku puzzle using emojis instead of numbers.",
+    privacy: "Read the Privacy Policy for Emoji Sudoku.",
+    terms: "Read the Terms of Use for Emoji Sudoku.",
+    disclaimer: "Read the Disclaimer for Emoji Sudoku.",
+  };
+
   document.title = titles[screen];
+
+  const metaDescription = document.querySelector<HTMLMetaElement>('meta[name="description"]');
+  if (metaDescription) {
+    metaDescription.content = descriptions[screen];
+  }
 }
 
 export default function App() {
@@ -76,7 +112,7 @@ export default function App() {
 
   // Keep document title in sync with the current screen.
   useEffect(() => {
-    updateDocumentTitle(screen);
+    updateDocumentMeta(screen);
   }, [screen]);
 
   // Track app open once.
@@ -205,6 +241,30 @@ export default function App() {
             <DifficultySelector
               onSelect={handleSelectDifficulty}
               onBack={handleBackFromDifficulty}
+            />
+          )}
+
+          {screen === "howTo" && (
+            <MarketingPage
+              type="howTo"
+              onPlayDaily={handlePlayDaily}
+              onSelectDifficulty={handleSelectDifficulty}
+            />
+          )}
+
+          {screen === "dailyLanding" && (
+            <MarketingPage
+              type="daily"
+              onPlayDaily={handlePlayDaily}
+              onSelectDifficulty={handleSelectDifficulty}
+            />
+          )}
+
+          {screen === "easyLanding" && (
+            <MarketingPage
+              type="easy"
+              onPlayDaily={handlePlayDaily}
+              onSelectDifficulty={handleSelectDifficulty}
             />
           )}
 
