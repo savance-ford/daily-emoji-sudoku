@@ -1,3 +1,5 @@
+"use client";
+
 import { Lightbulb, Eraser, RotateCcw, CheckCircle2 } from "lucide-react";
 import AdPlaceholder from "./AdPlaceholder";
 

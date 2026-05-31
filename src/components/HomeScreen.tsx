@@ -1,3 +1,5 @@
+"use client";
+
 import { BarChart3, CheckCircle2, Flame } from "lucide-react";
 import type { GameStats } from "../utils/storage";
 import StatsCards from "./StatsCards";

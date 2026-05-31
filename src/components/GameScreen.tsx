@@ -1,3 +1,5 @@
+"use client";
+
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, CheckCircle2 } from "lucide-react";
 import type { EmojiGrid, Puzzle } from "../data/puzzles";

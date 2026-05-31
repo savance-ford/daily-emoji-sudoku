@@ -1,3 +1,5 @@
+"use client";
+
 import type { EmojiGrid } from "../data/puzzles";
 
 interface SudokuGridProps {

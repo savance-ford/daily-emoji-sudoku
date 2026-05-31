@@ -1,3 +1,5 @@
+"use client";
+
 // Ad Placeholder component for Daily Emoji Sudoku
 // Replace the inner content with real ad code when ready.
 // Future expansion: Google AdSense, H5 game ads, rewarded ads.
