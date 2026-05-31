@@ -1,3 +1,5 @@
+"use client";
+
 import { ArrowLeft } from "lucide-react";
 
 type LegalPageType = "privacy" | "terms" | "disclaimer";

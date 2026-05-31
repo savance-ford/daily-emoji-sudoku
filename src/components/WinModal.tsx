@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useMemo, useRef } from "react";
 import { Share2, Play, Home, X } from "lucide-react";
 import type { Difficulty } from "../data/puzzles";
