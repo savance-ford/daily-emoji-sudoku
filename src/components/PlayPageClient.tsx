@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import GameScreen from "@/components/GameScreen";
 import { getDailyPuzzle, PUZZLES_BY_DIFFICULTY } from "@/data/puzzles";
 import type { Difficulty, Puzzle } from "@/data/puzzles";
@@ -15,22 +15,30 @@ export default function PlayPageClient() {
 
   const mode = searchParams.get("mode");
   const difficulty = searchParams.get("difficulty") as Difficulty | null;
+  const r = searchParams.get("r"); // changes on each "Play Another" to force a new puzzle
 
+  // Pure computation — no side effects. Re-runs whenever mode, difficulty, or r changes.
   const { puzzle, isDaily } = useMemo<{ puzzle: Puzzle | null; isDaily: boolean }>(() => {
     if (mode === "daily") {
-      const p = getDailyPuzzle();
-      trackEvent("daily_puzzle_started", { puzzleId: p.id });
-      return { puzzle: p, isDaily: true };
+      return { puzzle: getDailyPuzzle(), isDaily: true };
     }
     if (difficulty && ["easy", "medium", "hard"].includes(difficulty)) {
       const pool = PUZZLES_BY_DIFFICULTY[difficulty];
       const p = pool[Math.floor(Math.random() * pool.length)];
-      trackEvent("puzzle_started", { puzzleId: p.id, difficulty });
       return { puzzle: p, isDaily: false };
     }
     return { puzzle: null, isDaily: false };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [mode, difficulty, r]);
+
+  // Side effects (analytics) are correctly placed in useEffect, not useMemo.
+  useEffect(() => {
+    if (!puzzle) return;
+    if (isDaily) {
+      trackEvent("daily_puzzle_started", { puzzleId: puzzle.id });
+    } else {
+      trackEvent("puzzle_started", { puzzleId: puzzle.id, difficulty: puzzle.difficulty });
+    }
+  }, [puzzle, isDaily]);
 
   if (!puzzle) {
     // Invalid params — redirect home.
@@ -52,7 +60,7 @@ export default function PlayPageClient() {
     if (isDaily) {
       router.push("/difficulty");
     } else {
-      // Reload with same difficulty to get a fresh random puzzle.
+      // Changing r causes useMemo to re-run and pick a new random puzzle.
       router.replace(`/play?difficulty=${puzzle.difficulty}&r=${Date.now()}`);
     }
   };
