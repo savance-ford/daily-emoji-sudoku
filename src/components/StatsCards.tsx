@@ -1,3 +1,5 @@
+"use client";
+
 import { Flame, Trophy, CheckCircle2, Lightbulb } from "lucide-react";
 import type { GameStats } from "../utils/storage";
 

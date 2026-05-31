@@ -21,7 +21,7 @@ interface EventProperties {
 export function trackEvent(name: EventName, props?: EventProperties): void {
   // Future: send to analytics service
   // e.g., gtag('event', name, props) or mixpanel.track(name, props)
-  if (import.meta.env.DEV) {
+  if (process.env.NODE_ENV === "development") {
     console.log("[Analytics]", name, props ?? "");
   }
 }

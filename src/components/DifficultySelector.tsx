@@ -1,3 +1,5 @@
+"use client";
+
 import type { Difficulty } from "../data/puzzles";
 
 interface DifficultySelectorProps {
