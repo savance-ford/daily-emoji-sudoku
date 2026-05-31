@@ -143,26 +143,18 @@ export default function GameScreen({
       if (puzzleSolved || puzzle.givens[r][c] !== null) return;
       setSelectedCell([r, c]);
       clearTransientFeedback();
-
-      // If an emoji is already selected, tapping an editable cell places it.
-      if (!selectedEmoji) return;
-
-      setBoard((prev) => {
-        const next = cloneGrid(prev);
-        next[r][c] = selectedEmoji;
-        trackEvent("emoji_placed", { emoji: selectedEmoji, row: r, col: c });
-        return next;
-      });
     },
-    [clearTransientFeedback, puzzle.givens, puzzleSolved, selectedEmoji]
+    [clearTransientFeedback, puzzle.givens, puzzleSolved]
   );
 
   const handleEmojiClick = useCallback(
     (emoji: string) => {
       if (puzzleSolved) return;
-      setSelectedEmoji(emoji);
       clearTransientFeedback();
-      if (!selectedCell) return;
+      if (!selectedCell) {
+        setSelectedEmoji(emoji);
+        return;
+      }
 
       const [r, c] = selectedCell;
       if (puzzle.givens[r][c] !== null) return;
@@ -173,6 +165,7 @@ export default function GameScreen({
         trackEvent("emoji_placed", { emoji, row: r, col: c });
         return next;
       });
+      setSelectedEmoji(null);
     },
     [clearTransientFeedback, puzzle.givens, puzzleSolved, selectedCell]
   );
